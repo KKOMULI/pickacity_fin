@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>도시 순위</title>
+  <style>
+    table {
+      width: 70%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 5px;
+      text-align: center;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+  <h1>도시 순위</h1>
+
+  <div>
+    <label for="slider">치안의 중요도:</label>
+    <input type="range" id="safetyindex_weight" name="safetyindex_slider" min="0" max="10" value="5">
+    <label for="slider">물가의 중요도:</label>
+    <input type="range" id="costofliving_weight" name="costofliving_slider" min="0" max="10" value="5">
+    <label for="slider">비행시간의 중요도:</label>
+    <input type="range" id="flighttime_weight" name="flighttime_slider" min="0" max="10" value="5">
+    <label for="slider">관광의 중요도:</label>
+    <input type="range" id="tourismranking_weight" name="tourismranking_slider" min="0" max="10" value="5">
+    <button onclick="submit()">확인</button>
+    </div>
+
+  <br>
+  <div id="display">
+  <table id="cityTable">
+    <thead>
+      <tr>
+        <th>순위</th>
+        <th>도시</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>  
+  </div>
+
+  <script>
+    function submit() {
+        const safetyIndexValue = document.getElementById("safetyindex_weight").value;
+        const costOfLivingValue = document.getElementById("costofliving_weight").value;
+        const flightTimeValue = document.getElementById("flighttime_weight").value;
+        const tourismRankingValue = document.getElementById("tourismranking_weight").value;
+
+        const xhr = new XMLHttpRequest(); // XMLHttpRequest 객체 생성으로 서버와 상호작용 가능
+        xhr.open("POST", "/calculate"); // /calculate 엔드포인트로 요청 보냄
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // 요청 헤더에 컨텐츠 타입 설정
+        xhr.send(`safetyindex_weight=${safetyIndexValue}&costofliving_weight=${costOfLivingValue}&flighttime_weight=${flightTimeValue}&tourismranking_weight=${tourismRankingValue}`); // POST요청의 본문에 데이터를 담아 서버에 전송
+        xhr.onload = function() { // 서버 응답 처리
+            if (xhr.status === 200) { // HTTP 응답 상태 코드가 200일 때, 즉 요청이 성공적으로 처리되었을 때
+                const response = JSON.parse(xhr.responseText); // 서버로부터 받은 JSON 형식의 응답을 JavaScript 객체로 변환
+                console.log(response.topCities);
+                var tableBody = document.querySelector("#cityTable tbody"); // HTML 문서에 #cityTable ID를 가진 요소의 자식인 tbody 요소를 선택
+                tableBody.innerHTML = ''; // 기존 표 내용을 지우기 위해 tbody 요소 내부 HTML 비움
+                response.topCities.forEach((city, index) => { // 서버로부터 받은 응답 객체의 topCities 배열을 순회하면서 각 도시에 대해 반복 작업을 수행
+                    var row = tableBody.insertRow(); // 새로운 행을 표에 추가
+                    row.insertCell().textContent = index + 1; // 새로운 행에 셀 삽입 후 순위 표시
+                    row.insertCell().textContent = city.City; // 새로운 행에 셀 삽입 후 도시명 표시
+                });
+            } else {
+                console.error("서버 오류 발생:", xhr.statusText);
+            }
+        };
+    }
+  </script>  
+</body>
+</html>
