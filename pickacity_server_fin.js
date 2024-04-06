@@ -47,10 +47,13 @@ function calculateMin(column) {
 function calculateRankings(sliderValue) {
     topCitiesData = data.map(function(city) { // data의 각 요소를 city라는 변수로 받아들이고 계산을 통해 city에 Total Score라는 속성을 추가한 후 반환하여 topCitiesData에 저장
         const livingCostScore = (calculateMean('Cost of Living Index') - parseFloat(city['Cost of Living Index'])) / calculateStdDev('Cost of Living Index');
+        const mappedLivingCostScore = 100 * (livingCostScore - calculateMin('Cost of Living Index') / (calculateMax('Cost of Living Index') - calculateMin('Cost of Living Index')))
         const safetyScore = (parseFloat(city['Safety Index']) - calculateMean('Safety Index')) / calculateStdDev('Safety Index');
+        const mappedSafetyScore = 100 * (safetyScore - calculateMin('Safety Index') / (calculateMax('Safety Index') - calculateMin('Safety Index')))
         const tourismScore = 100 * (calculateMax('Tourism Ranking') - parseFloat(city['Tourism Ranking']) + 1) / (calculateMax('Tourism Ranking') - calculateMin('Tourism Ranking'));
         const flightTimeScore = (calculateMean('Flight Time') - parseFloat(city['Flight Time'])) / calculateStdDev('Flight Time');
-        city['Total Score'] = livingCostScore * sliderValue.costofliving_weight + safetyScore * sliderValue.safetyindex_weight + tourismScore * sliderValue.tourismranking_weight + flightTimeScore * sliderValue.flighttime_weight;
+        const mappedFlightScore = 100 * (flightTimeScore - calculateMin('Flight Time') / (calculateMax('Flight Time') - calculateMin('Flight Time')))
+        city['Total Score'] = mappedLivingCostScore * sliderValue.costofliving_weight + mappedSafetyScore * sliderValue.safetyindex_weight + tourismScore * sliderValue.tourismranking_weight + mappedFlightScore * sliderValue.flighttime_weight;
         return city;
       });
   const topCitiesRanking = topCitiesData.sort((a, b) => b['Total Score'] - a['Total Score']); // topCitesData 속 Total Score 속성 값의 내림차순으로 정렬하여 topCitesRanking에 저장
