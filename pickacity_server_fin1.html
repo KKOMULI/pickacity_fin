@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pick a City</title>
+  <style>
+    body {
+      font-family: Arial, Helvetica, sans-serif; 
+      text-align: center;
+      background-image: url(https://cdn.pixabay.com/animation/2023/07/31/11/25/11-25-56-622_512.gif);
+      background-size: cover;
+      background-repeat: repeat;
+    }
+
+    h1 {
+      color: #003302;
+    }
+
+    table {
+      width: 90%;
+      border-collapse: collapse;
+      margin: 20px auto;
+      table-layout: fixed; /* 셀의 너비를 고정 */
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: center;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1) {
+      width: 30%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2) {
+      width: 70%;
+    }
+
+    td {
+      background-color: #ffffff63;
+    }
+
+    button {
+      background-color: #3459ff;
+      color: white;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background-color: #0051ff;
+    }
+
+    button.small {
+      background-color: #eeeeee8f;
+      color: rgb(175, 175, 175);
+      padding: 3px 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button.small:hover {
+      background-color: #dddddd;
+    }
+
+    input[type=range] {
+      width: 150px;
+      height: 10px;
+      margin: 5px;
+    }
+
+    #display {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Pick a City</h1>
+  <h3>당신만을 위한 여행지를 만나보세요</h3>
+  <br>
+
+  <div>
+    <button class="small" onclick="whatIsSafetyIndex()">?</button>  <label for="safetyindex_weight">치안의 중요도: <span id="safetyindex_value"></span></label>
+    <input type="range" id="safetyindex_weight" name="safetyindex_slider" min="1" max="9" value="5" oninput="updateSliderValue(this, 'safetyindex_value')">
+
+    <button class="small" onclick="whatIsCostOfLivingIndex()">?</button>  <label for="costofliving_weight">물가의 중요도: <span id="costofliving_value"></span></label>
+    <input type="range" id="costofliving_weight" name="costofliving_slider" min="1" max="9" value="5" oninput="updateSliderValue(this, 'costofliving_value')">
+
+    <button class="small" onclick="whatIsFlightTimeIndex()">?</button>  <label for="flighttime_weight">비행시간의 중요도: <span id="flighttime_value"></span></label>
+    <input type="range" id="flighttime_weight" name="flighttime_slider" min="1" max="9" value="5" oninput="updateSliderValue(this, 'flighttime_value')">
+
+    <button class="small" onclick="whatIsTourismIndex()">?</button>  <label for="tourismranking_weight">관광의 중요도: <span id="tourismranking_value"></span></label>
+    <input type="range" id="tourismranking_weight" name="tourismranking_slider" min="1" max="9" value="5" oninput="updateSliderValue(this, 'tourismranking_value')">
+
+    <button onclick="submit()">확인</button>
+    </div>
+
+  <br>
+
+  <div id="display">
+  <table id="cityTable">
+    <thead>
+      <tr>
+        <th>순위</th>
+        <th>도시</th>
+      </tr>
+    </thead>
+    <tbody>
+    </tbody>
+  </table>  
+  </div>
+
+  <script>
+    window.onload = function() { // 각 슬라이더의 초기 값을 표시
+        updateSliderValue(document.getElementById('safetyindex_weight'), 'safetyindex_value');
+        updateSliderValue(document.getElementById('costofliving_weight'), 'costofliving_value');
+        updateSliderValue(document.getElementById('flighttime_weight'), 'flighttime_value');
+        updateSliderValue(document.getElementById('tourismranking_weight'), 'tourismranking_value');
+    };
+
+    function updateSliderValue(slider, spanId) { // 슬라이더의 현재 값을 가져와서 해당하는 HTML 요소에 표시
+    document.getElementById(spanId).textContent = slider.value;
+    }
+
+    function whatIsSafetyIndex() {
+        alert('치안의 중요도는 NUMBEO에서 발표한 2024년 전세계 도시별 범죄율 및 치안 지수를 활용하여 계산하였습니다. 여행지를 선택할 때 도시의 치안을 얼마나 중요하게 생각하나요? 1부터 9까지의 숫자로 표현해보세요.')
+    }
+
+    function whatIsCostOfLivingIndex() {
+        alert('물가의 중요도는 NUMBEO에서 발표한 2024년 전세계 도시별 생활비 지수를 활용하여 계산하였습니다. 여행지를 선택할 때 낮은 물가의 도시를 얼마나 선호하나요? 1부터 9까지의 숫자로 표현해보세요.')
+    }
+
+    function whatIsTourismIndex() {
+        alert('관광의 중요도는 Master Card에서 발표한 2024년 글로벌 행선지 도시 지수를 활용하여 계산하였습니다. 여행지를 선택할 때 다양한 관광 요소를 얼마나 중요하게 생각하나요? 1부터 9까지의 숫자로 표현해보세요.')
+    }
+
+    function whatIsFlightTimeIndex() {
+        alert('물가의 중요도는 SkyScaner에서의 정보를 바탕으로 인천에서부터의 거리로 계산하였습니다. 가까운 거리의 여행지를 얼마나 선호하나요? 1부터 9까지의 숫자로 표현해보세요.')
+    }
+
+    function submit() {
+        const safetyIndexValue = document.getElementById("safetyindex_weight").value;
+        const costOfLivingValue = document.getElementById("costofliving_weight").value;
+        const flightTimeValue = document.getElementById("flighttime_weight").value;
+        const tourismRankingValue = document.getElementById("tourismranking_weight").value;
+
+        const xhr = new XMLHttpRequest(); // XMLHttpRequest 객체 생성으로 서버와 상호작용 가능
+        xhr.open("POST", "/calculate"); // /calculate 엔드포인트로 요청 보냄
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded"); // 요청 헤더에 컨텐츠 타입 설정
+        xhr.send(`safetyindex_weight=${safetyIndexValue}&costofliving_weight=${costOfLivingValue}&flighttime_weight=${flightTimeValue}&tourismranking_weight=${tourismRankingValue}`); // POST요청의 본문에 데이터를 담아 서버에 전송
+        xhr.onload = function() { // 서버 응답 처리
+            if (xhr.status === 200) { // HTTP 응답 상태 코드가 200일 때, 즉 요청이 성공적으로 처리되었을 때
+                const response = JSON.parse(xhr.responseText); // 서버로부터 받은 JSON 형식의 응답을 JavaScript 객체로 변환
+                console.log(response.topCities);
+                var tableBody = document.querySelector("#cityTable tbody"); // HTML 문서에 #cityTable ID를 가진 요소의 자식인 tbody 요소를 선택
+                tableBody.innerHTML = ''; // 기존 표 내용을 지우기 위해 tbody 요소 내부 HTML 비움
+                response.topCities.forEach((city, index) => { // 서버로부터 받은 응답 객체의 topCities 배열을 순회하면서 각 도시에 대해 반복 작업을 수행
+                    var row = tableBody.insertRow(); // 새로운 행을 표에 추가
+                    row.insertCell().textContent = index + 1; // 새로운 행에 셀 삽입 후 순위 표시
+                    row.insertCell().textContent = city.City; // 새로운 행에 셀 삽입 후 도시명 표시
+                });
+            } else {
+                console.error("서버 오류 발생:", xhr.statusText);
+            }
+        };
+    }
+  </script>  
+</body>
+</html>
